@@ -306,14 +306,8 @@ namespace LuaSTGEditorSharp.Windows.Input
 
         public void CombineResult()
         {
-            if (AlphaUsed)
-            {
-                result = AStr + "," + RStr + "," + GStr + "," + BStr;
-            }
-            else
-            {
-                result = RStr + "," + GStr + "," + BStr;
-            }
+            result = (AlphaUsed ? $"{AStr.Trim()}, " : "")
+                     + $"{RStr.Trim()}, {GStr.Trim()}, {BStr.Trim()}";
             RaisePropertyChanged("Result");
         }
 

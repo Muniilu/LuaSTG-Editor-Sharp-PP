@@ -142,6 +142,7 @@
     <Compile Include="EditorData\Message\InvalidArchiveSpaceMessage.cs" />
     <Compile Include="EditorData\Message\InvalidCustomNodeMessage.cs" />
     <Compile Include="EditorData\Message\RepeatedNameMessage.cs" />
+    <Compile Include="EditorData\Message\CustomMessage.cs" />
     <Compile Include="EditorData\Message\VarNameInvalidMessage.cs" />
     <Compile Include="EditorData\Node\AbstractNodeTypeCache.cs" />
     <Compile Include="EditorData\Node\Advanced\AdvancedRepeat\AdvancedRepeat.cs" />

@@ -157,6 +157,13 @@ namespace LuaSTGEditorSharp.Windows.Input
                 , new string[] { "\"left\"", "\"center\"", "\"right\"", "nil" });
             target.Add("richtextvalign"
                 , new string[] { "\"top\"", "\"middle\"", "\"bottom\"", "nil" });
+
+            target.Add("text_interface_content_type", ["Direct", "Label Path", "Template"]);
+            target.Add("text_interface_template_type", ["Direct", "Label Path"]);
+            target.Add("text_interface_font_type", ["Direct", "Custom Desc"]);
+            target.Add("text_interface_hAlign", ["Left", "Center", "Right", "Unchanged"]);
+            target.Add("text_interface_vAlign", ["Top", "Middle", "Right", "Unchanged"]);
+            target.Add("text_interface_color_type", ["ARGB String", "Split RGBA"]);
         }
 
         public void RegisterInputWindow(Dictionary<string, Func<AttrItem, string, IInputWindow>> target)
@@ -266,6 +273,19 @@ namespace LuaSTGEditorSharp.Windows.Input
                 , InputWindowSelector.SelectComboBox("richtexthalign"), "Input Horizontal Alignment"));
             target.Add("richtextvalign", (src, tar) => new Selector(tar
                 , InputWindowSelector.SelectComboBox("richtextvalign"), "Input Vertical Alignment"));
+
+            target.Add("text_interface_content_type", (src, tar) =>
+                new Selector(tar, InputWindowSelector.SelectComboBox("text_interface_content_type"), "Select Text Content Type"));
+            target.Add("text_interface_template_type", (src, tar) =>
+                new Selector(tar, InputWindowSelector.SelectComboBox("text_interface_template_type"), "Select Template Type"));
+            target.Add("text_interface_font_type", (src, tar) =>
+                new Selector(tar, InputWindowSelector.SelectComboBox("text_interface_font_type"), "Select Font Input Type"));
+            target.Add("text_interface_hAlign", (src, tar) =>
+                new Selector(tar, InputWindowSelector.SelectComboBox("text_interface_hAlign"), "Select Horizontal Alignment"));
+            target.Add("text_interface_vAlign", (src, tar) =>
+                new Selector(tar, InputWindowSelector.SelectComboBox("text_interface_vAlign"), "Select Vertical Alignment"));
+            target.Add("text_interface_color_type", (src, tar) =>
+                new Selector(tar, InputWindowSelector.SelectComboBox("text_interface_color_type"), "Select Color Input Type"));
         }
     }
 }

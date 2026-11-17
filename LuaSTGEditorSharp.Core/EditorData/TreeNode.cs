@@ -35,7 +35,7 @@ namespace LuaSTGEditorSharp.EditorData
     [Serializable]
     public abstract class TreeNode : INotifyPropertyChanged, ICloneable, IMessageThrowable
     {
-        private static ILogger Logger;
+        protected static ILogger Logger;
 
         /// <summary>
         /// Store attributes in <see cref="TreeNode"/>.
@@ -860,17 +860,43 @@ namespace LuaSTGEditorSharp.EditorData
         }
 
         /// <summary>
+        /// Allows node to impose custom validation rules on potential children.
+        /// </summary>
+        /// <param name="child">
+        /// New potential child.
+        /// </param>
+        /// <param name="index">
+        /// Insertion index in paren't child collection.
+        /// </param>
+        /// <param name="isNewParent">
+        /// If the child should be interpreted as the node's new parent (Parent insertion mode only).
+        /// </param>
+        /// <returns>True if child can be valid, false otherwise.</returns>
+        public virtual bool CustomValidateChild(TreeNode child, int index, bool isNewParent)
+        {
+            return true;
+        }
+
+        /// <summary>
         /// Validate whether the given node can be the child of this node.
         /// </summary>
         /// <param name="toV">
         /// The given node.
         /// </param>
         /// <returns>
+        /// <param name="index">
+        /// Insertion index in paren't child collection.
+        /// </param>
+        /// <param name="isNewParent">
+        /// If the child should be interpreted as the node's new parent (Parent insertion mode only).
+        /// </param>
         /// A boolean, true for can.
         /// </returns>
-        public bool ValidateChild(TreeNode toV)
+        public bool ValidateChild(TreeNode toV, int index, bool isNewParent = false)
         {
-            bool isValidated = ValidateChild(toV, this);
+            bool isValidated = CustomValidateChild(toV, index, isNewParent)
+                            && ValidateChild(toV, this);
+
             if (isValidated)
                 Logger.Verbose($"Node {toV} was validated.");
             else
@@ -893,11 +919,7 @@ namespace LuaSTGEditorSharp.EditorData
         /// </returns>
         private bool ValidateChild(TreeNode toV, TreeNode originalParent)
         {
-            if (this is Folder 
-                || this is FolderRed 
-                || this is FolderGreen 
-                || this is FolderBlue 
-                || this is FolderYellow)
+            if (this is Folder or FolderRed or FolderGreen or FolderBlue or FolderYellow)
                 return GetLogicalParent()?.ValidateChild(toV, originalParent) ?? true;
             if (toV is Folder || toV is FolderRed || toV is FolderGreen || toV is FolderBlue || toV is FolderYellow)
             {
@@ -961,9 +983,8 @@ namespace LuaSTGEditorSharp.EditorData
         private bool ValidateChild_Obs(TreeNode toV)
         {
             if (MatchType(toV.GetType(), new Type[] { typeof(IfThen), typeof(IfElse) })) return false;
-            foreach (TreeNode t in toV.Children)
-            {
-                if (Parent != null) if (!Parent.ValidateChild(t)) return false;
+            for (int i = 0; i < toV.Children.Count; i++) {
+                if (Parent != null) if (!Parent.ValidateChild(toV.Children[i], i)) return false;
             }
             return true;
         }

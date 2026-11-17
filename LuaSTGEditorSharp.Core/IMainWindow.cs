@@ -14,5 +14,6 @@ namespace LuaSTGEditorSharp
         void Insert(TreeNode t, bool isInvoke, string[] supportedVers);
         void Reveal(TreeNode t);
         DocumentData ActivatedWorkSpaceData { get; }
+        void Log(string s);
     }
 }

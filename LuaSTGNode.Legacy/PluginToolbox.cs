@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LuaSTGEditorSharp.Plugin;
 using LuaSTGEditorSharp.EditorData;
 using LuaSTGEditorSharp.EditorData.Node.General;
@@ -18,13 +14,10 @@ using LuaSTGEditorSharp.EditorData.Node.Object;
 using LuaSTGEditorSharp.EditorData.Node.Graphics;
 using LuaSTGEditorSharp.EditorData.Node.Audio;
 using LuaSTGEditorSharp.EditorData.Node.Render;
-using LuaSTGEditorSharp.EditorData.Node.Advanced;
-using System.Windows;
-using System.Windows.Resources;
 using System.IO;
-using MoonSharp.Interpreter;
 using LuaSTGEditorSharp.CustomNodes;
 using LuaSTGEditorSharp.EditorData.Node.RichText;
+using LuaSTGEditorSharp.EditorData.Node.TextInterface;
 
 namespace LuaSTGEditorSharp
 {
@@ -430,11 +423,63 @@ namespace LuaSTGEditorSharp
                 , new AddNode(AddRichTextMeasureNode));
             richtext.Add(new ToolboxItemData("richtextsetstate", "/LuaSTGNode.Legacy;component/images/richtextsetstate.png", "Set RichText Render State")
                 , new AddNode(AddRichTextSetStateNode));
+            richtext.Add(new ToolboxItemData(true), null);
             richtext.Add(new ToolboxItemData("richtextdestroy", "/LuaSTGNode.Legacy;component/images/richtextdestroy.png", "Destroy RichText")
                 , new AddNode(AddRichTextDestroyNode));
 
             #endregion
             ToolInfo.Add("RichText", richtext);
+
+            var textInterface = new Dictionary<ToolboxItemData, AddNode>();
+            #region TextInterface
+            textInterface.Add(new ToolboxItemData("text_create", "/LuaSTGNode.Legacy;component/images/text_interface_create.png", "Create Text Instance"),
+                new AddNode(AddTextCreateNode));
+            textInterface.Add(new ToolboxItemData("text_load", "/LuaSTGNode.Legacy;component/images/richtextupdate.png", "Load Text"),
+                new AddNode(AddTextLoadNode));
+            textInterface.Add(new ToolboxItemData("text_unload", "/LuaSTGNode.Legacy;component/images/text_interface_unload.png", "Unload Text"),
+                new AddNode(AddTextUnloadNode));
+            textInterface.Add(new ToolboxItemData("text_reload", "/LuaSTGNode.Legacy;component/images/text_interface_reload.png", "Reload Text"),
+                new AddNode(AddTextReloadNode));
+            textInterface.Add(new ToolboxItemData(true), null);
+
+            textInterface.Add(new ToolboxItemData("text_set_text", "/LuaSTGNode.Legacy;component/images/richtextsettext.png", "Set Text Content"),
+                new AddNode(AddTextSetTextNode));
+            textInterface.Add(new ToolboxItemData("text_set_template_arg", "/LuaSTGNode.Legacy;component/images/text_interface_set_template_arg.png", "Set Template Arg"),
+                new AddNode(AddTextSetTemplateArgNode));
+            textInterface.Add(new ToolboxItemData("text_set_alignment", "/LuaSTGNode.Legacy;component/images/text_interface_set_alignment.png", "Set Alignment"),
+                new AddNode(AddTextSetAlignmentNode));
+            textInterface.Add(new ToolboxItemData(true), null);
+
+            textInterface.Add(new ToolboxItemData("text_set_color", "/LuaSTGNode.Legacy;component/images/text_interface_set_fill.png", "Set Fill Color (not meant for animations)"),
+                new AddNode(AddTextSetColorNode));
+            textInterface.Add(new ToolboxItemData("text_set_font_size", "/LuaSTGNode.Legacy;component/images/text_interface_set_size.png", "Set Font Size (not meant for animations)"),
+                new AddNode(AddTextSetFontSizeNode));
+            textInterface.Add(new ToolboxItemData(true), null);
+
+            textInterface.Add(new ToolboxItemData("text_set_outline", "/LuaSTGNode.Legacy;component/images/richtextsetoutline.png", "Set Outline"),
+                new AddNode(AddTextSetOutlineNode));
+            textInterface.Add(new ToolboxItemData("text_set_shadow", "/LuaSTGNode.Legacy;component/images/richtextsetshadow.png", "Set Shadow (RichText only)"),
+                new AddNode(AddTextSetShadowNode));
+            textInterface.Add(new ToolboxItemData(true), null);
+
+            textInterface.Add(new ToolboxItemData("text_set_color_filter", "/LuaSTGNode.Legacy;component/images/text_interface_filter_color.png", "Set Filter Color"),
+                new AddNode(AddTextSetColorFilterNode));
+            textInterface.Add(new ToolboxItemData("text_set_alpha", "/LuaSTGNode.Legacy;component/images/text_interface_alpha.png", "Set Alpha"),
+                new AddNode(AddTextSetAlphaNode));
+            textInterface.Add(new ToolboxItemData("text_set_blend_mode", "/LuaSTGNode.Legacy;component/images/text_interface_set_blend.png", "Set Blend Mode"),
+                new AddNode(AddTextSetBlendModeNode));
+            textInterface.Add(new ToolboxItemData(true), null);
+
+            textInterface.Add(new ToolboxItemData("text_set_scale", "/LuaSTGNode.Legacy;component/images/text_interface_set_scale.png", "Set Scale"),
+                new AddNode(AddTextSetScaleNode));
+            textInterface.Add(new ToolboxItemData("text_set_rotation", "/LuaSTGNode.Legacy;component/images/text_interface_set_rotation.png", "Set Rotation"),
+                new AddNode(AddTextSetRotationNode));
+            textInterface.Add(new ToolboxItemData(true), null);
+
+            textInterface.Add(new ToolboxItemData("text_render", "/LuaSTGNode.Legacy;component/images/richtextrender.png", "Render Text"),
+                new AddNode(AddTextRenderNode));
+            #endregion
+            ToolInfo.Add("Text Interface", textInterface);
 
             var audio = new Dictionary<ToolboxItemData, AddNode>();
             #region audio
@@ -1503,7 +1548,59 @@ namespace LuaSTGEditorSharp
         {
             parent.Insert(new RichTextDestroy(parent.ActivatedWorkSpaceData));
         }
-
+        #endregion
+        #region TextInterface
+        private void AddTextCreateNode() {
+            parent.Insert(new TextCreate(parent.ActivatedWorkSpaceData));
+        }
+        private void AddTextLoadNode() {
+            parent.Insert(new TextLoad(parent.ActivatedWorkSpaceData));
+        }
+        private void AddTextUnloadNode() {
+            parent.Insert(new TextUnload(parent.ActivatedWorkSpaceData));
+        }
+        private void AddTextReloadNode() {
+            parent.Insert(new TextReload(parent.ActivatedWorkSpaceData));
+        }
+        private void AddTextRenderNode() {
+            parent.Insert(new TextRender(parent.ActivatedWorkSpaceData));
+        }
+        private void AddTextSetTextNode() {
+            parent.Insert(new TextSetText(parent.ActivatedWorkSpaceData));
+        }
+        private void AddTextSetTemplateArgNode() {
+            parent.Insert(new TextSetTemplateArg(parent.ActivatedWorkSpaceData));
+        }
+        private void AddTextSetAlignmentNode() {
+            parent.Insert(new TextSetAlignment(parent.ActivatedWorkSpaceData));
+        }
+        private void AddTextSetOutlineNode() {
+            parent.Insert(new TextSetOutline(parent.ActivatedWorkSpaceData));
+        }
+        private void AddTextSetShadowNode() {
+            parent.Insert(new TextSetShadow(parent.ActivatedWorkSpaceData));
+        }
+        private void AddTextSetColorNode() {
+            parent.Insert(new TextSetColor(parent.ActivatedWorkSpaceData));
+        }
+        private void AddTextSetColorFilterNode() {
+            parent.Insert(new TextSetColorFilter(parent.ActivatedWorkSpaceData));
+        }
+        private void AddTextSetAlphaNode() {
+            parent.Insert(new TextSetAlpha(parent.ActivatedWorkSpaceData));
+        }
+        private void AddTextSetBlendModeNode() {
+            parent.Insert(new TextSetBlendMode(parent.ActivatedWorkSpaceData));
+        }
+        private void AddTextSetFontSizeNode() {
+            parent.Insert(new TextSetSize(parent.ActivatedWorkSpaceData));
+        }
+        private void AddTextSetScaleNode() {
+            parent.Insert(new TextSetScale(parent.ActivatedWorkSpaceData));
+        }
+        private void AddTextSetRotationNode() {
+            parent.Insert(new TextSetRotation(parent.ActivatedWorkSpaceData));
+        }
         #endregion
         #region audio
         private void AddLoadSENode()

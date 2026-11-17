@@ -30,7 +30,8 @@ namespace LuaSTGEditorSharp.EditorData.Commands.Factory
         /// <returns>A <see cref="bool"/> value, true for can.</returns>
         public override bool ValidateType(TreeNode toOp, TreeNode toIns)
         {
-            return toOp.Parent.ValidateChild(toIns);
+            TreeNode parent = toOp.Parent;
+            return parent.ValidateChild(toIns, parent.Children.IndexOf(toOp));
         }
     }
 }

@@ -80,7 +80,6 @@ namespace LuaSTGEditorSharp.EditorData.Node.Object
 
         public override IEnumerable<Tuple<int, TreeNode>> GetLines()
         {
-            int i = 0;
             if (Macrolize(3) == "false")
                 yield return new Tuple<int, TreeNode>(1, this);
             yield return new Tuple<int, TreeNode>(5, this);

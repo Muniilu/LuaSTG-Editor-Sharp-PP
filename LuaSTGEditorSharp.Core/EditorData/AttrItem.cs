@@ -158,6 +158,14 @@ namespace LuaSTGEditorSharp.EditorData
         }
 
         /// <summary>
+        /// Name of the attribute.
+        /// </summary>
+        [JsonIgnore]
+        public virtual string Name {
+            get => attrCap;
+        }
+
+        /// <summary>
         /// Property for <see cref="attrCap"/>. Read only.
         /// </summary>
         [JsonIgnore]

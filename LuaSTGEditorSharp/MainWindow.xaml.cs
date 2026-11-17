@@ -127,6 +127,12 @@ namespace LuaSTGEditorSharp
 
         public static ILogger Logger = EditorLogging.ForContext("MainWindow");
 
+        public void Log(string s) {
+            Logger.Information(s);
+            DebugString += s + "\n";
+            debugOutput.ScrollToEnd();
+        }
+
         public MainWindow()
         {
             toolbox = PluginHandler.Plugin.GetToolbox(this);
@@ -559,6 +565,7 @@ namespace LuaSTGEditorSharp
                 //newDoc.TreeNodes[0].FixBan();
                 newDoc.OriginalMeta.PropertyChanged += newDoc.OnEditing;
                 AddRecentlyOpened(path);
+                DebugString = "";
             }
             catch (JsonException e)
             {
@@ -896,6 +903,10 @@ namespace LuaSTGEditorSharp
                 };
                 log.Start();
             }
+        }
+
+        protected void ClearLog_Click(object sender, RoutedEventArgs e) {
+            DebugString = "";
         }
 
         protected void CheckForUpdates_Click(object sender, RoutedEventArgs e)

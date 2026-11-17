@@ -951,7 +951,13 @@
                     </TabItem>
                     <TabItem x:Name="tabOutput" Header="Debug Log">
                         <TextBox x:Name="debugOutput" VerticalScrollBarVisibility="Visible" 
-                                 Text="{Binding DebugString, ElementName=window}" IsReadOnly="True"/>
+                                 Text="{Binding DebugString, ElementName=window}" IsReadOnly="True">
+                            <TextBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Clear Log" Click="ClearLog_Click"/>
+                                </ContextMenu>
+                            </TextBox.ContextMenu>
+                        </TextBox>
                     </TabItem>
                 </TabControl>
                 <GridSplitter Grid.Row="1"  HorizontalAlignment="Stretch" Opacity="0"/>

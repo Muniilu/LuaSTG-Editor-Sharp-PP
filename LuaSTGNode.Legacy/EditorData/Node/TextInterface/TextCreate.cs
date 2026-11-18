@@ -118,7 +118,7 @@ public class TextCreate : TextSetText {
             if (jpScale == "") jpScale = "nil";
             if (cnScale == "") cnScale = "nil";
 
-            yield return indent + $"local _lastFontDesc = FontDesc({defFont}, {jpFont}, {cnFont}, {jpScale}, {cnScale})\n\n";
+            yield return indent + $"local _lastFontDesc = FontDesc(fonts.{defFont}, fonts.{jpFont}, fonts.{cnFont}, {jpScale}, {cnScale})\n\n";
         }
 
         string lhs = $"{(container == "" ? textName : container + "." + textName)} = ";

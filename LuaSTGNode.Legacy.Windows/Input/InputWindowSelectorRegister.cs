@@ -163,7 +163,8 @@ namespace LuaSTGEditorSharp.Windows.Input
             target.Add("text_interface_font_type", ["Direct", "Custom Desc"]);
             target.Add("text_interface_hAlign", ["Left", "Center", "Right", "Unchanged"]);
             target.Add("text_interface_vAlign", ["Top", "Middle", "Right", "Unchanged"]);
-            target.Add("text_interface_color_type", ["ARGB String", "Split RGBA"]);
+            target.Add("text_interface_color_filter_input", ["ARGB String", "Split RGBA"]);
+            target.Add("text_interface_color_input", ["Direct", "Gradient"]);
         }
 
         public void RegisterInputWindow(Dictionary<string, Func<AttrItem, string, IInputWindow>> target)
@@ -284,8 +285,10 @@ namespace LuaSTGEditorSharp.Windows.Input
                 new Selector(tar, InputWindowSelector.SelectComboBox("text_interface_hAlign"), "Select Horizontal Alignment"));
             target.Add("text_interface_vAlign", (src, tar) =>
                 new Selector(tar, InputWindowSelector.SelectComboBox("text_interface_vAlign"), "Select Vertical Alignment"));
-            target.Add("text_interface_color_type", (src, tar) =>
-                new Selector(tar, InputWindowSelector.SelectComboBox("text_interface_color_type"), "Select Color Input Type"));
+            target.Add("text_interface_color_filter_input", (src, tar) =>
+                new Selector(tar, InputWindowSelector.SelectComboBox("text_interface_color_filter_input"), "Select Color Input Mode"));
+            target.Add("text_interface_color_input", (src, tar) =>
+                new Selector(tar, InputWindowSelector.SelectComboBox("text_interface_color_input"), "Select Color Input Mode"));
         }
     }
 }

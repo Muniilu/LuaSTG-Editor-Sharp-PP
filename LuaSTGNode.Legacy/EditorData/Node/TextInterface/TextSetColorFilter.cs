@@ -11,9 +11,9 @@ public class TextSetColorFilter : TextInterfaceNode {
     [JsonConstructor]
     private TextSetColorFilter() : base() { }
     public TextSetColorFilter(DocumentData workspace) : base(workspace) {
-        string defInput = ColorInput.String;
-        attributes.Add(new DependencyAttrItem("Color Input", defInput, this, "text_interface_color_type"));
-        RefreshAttrs(defInput);
+        var mode = new DependencyAttrItem("Input Mode", ColorInput.String, this, "text_interface_color_filter_input");
+        attributes.Add(mode);
+        RefreshAttrs(mode);
     }
 
     private static class ColorInput {
@@ -22,14 +22,15 @@ public class TextSetColorFilter : TextInterfaceNode {
     }
 
     public override void ReflectAttr(DependencyAttrItem relatedAttrItem, DependencyAttributeChangedEventArgs args) {
-        RefreshAttrs(ArgVal(0));
+        RefreshAttrs(relatedAttrItem);
     }
 
-    private void RefreshAttrs(string inputType) {
-        while (attributes.Count > 1)
-            attributes.RemoveAt(1);
+    private void RefreshAttrs(AttrItem mode) {
+        int modeIndex = attributes.IndexOf(mode);
+        for (int i = attributes.Count - 1; i > modeIndex; i--)
+            attributes.RemoveAt(i);
 
-        switch (inputType) {
+        switch (mode.AttrInput) {
             default:
             case ColorInput.String:
                 attributes.Add(new AttrItem("ARGB String", "255, 255, 255, 255", this, "ARGB"));
@@ -118,7 +119,7 @@ public class TextSetColorFilter : TextInterfaceNode {
                 break;
 
             default:
-                errors.Add(new CustomMessage("Color Input type must be \"ARGB String\" or \"Split RGBA\".", 0, this));
+                errors.Add(new CustomMessage("Input Mode must be \"ARGB String\" or \"Split RGBA\".", 0, this));
                 break;
         }
     }

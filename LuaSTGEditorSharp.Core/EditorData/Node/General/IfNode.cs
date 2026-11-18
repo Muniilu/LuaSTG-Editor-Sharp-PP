@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Xml.Serialization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LuaSTGEditorSharp.EditorData.Document;
 using LuaSTGEditorSharp.EditorData.Node.NodeAttributes;
 using Newtonsoft.Json;
 
@@ -34,6 +29,20 @@ namespace LuaSTGEditorSharp.EditorData.Node.General
         {
             get => DoubleCheckAttr(0).attrInput;
             set => DoubleCheckAttr(0).attrInput = value;
+        }
+
+        public override bool CustomValidateChild(TreeNode child, int index, bool isNewParent) {
+            if (index > 0) { // Then node must be 1st
+                if (child is IfElse)
+                    return index == Children.Count;
+
+                if (child is IfElseIf) {
+                    int elseID = Children.ToList().FindIndex(c => c is IfElse);
+                    return elseID == -1 || index <= elseID;
+                }
+            }
+
+            return false;
         }
 
         public IEnumerable<string> BaseToLua(int spacing, IEnumerable<TreeNode> children)
